@@ -1,0 +1,30 @@
+---
+
+## General
+apm_server_package_state: present
+apm_server_version: 8.9.0
+apm_server_major_version: "{{ apm_server_version.split('.')[0] }}"
+apm_server_user: apm-server
+apm_server_group: apm-server
+
+apm_server_service_state: started
+apm_server_service_enabled: true
+
+# Package paths
+apm_server_home_path: /usr/share/apm-server
+apm_server_config_path: /etc/apm-server
+apm_server_data_path: /var/lib/apm-server
+apm_server_logs_path: /var/log/apm-server
+apm_server_config_file: /etc/apm-server/apm-server.yml
+apm_server_config_template_path: "{{ role_path }}/templates/config"
+
+apm_server_service_config_path: /etc/systemd/system/apm-server.service.d
+apm_server_service_config_file: "{{ apm_server_service_config_path }}/default.conf"
+
+apm_server_log_options: ""
+
+apm_server_gpg_key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+apm_server_ppa_source: deb https://artifacts.elastic.co/packages/{{ apm_server_major_version }}.x/apt stable main
+
+package_dependencies:
+  - apt-transport-https

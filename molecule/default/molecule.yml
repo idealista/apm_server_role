@@ -1,0 +1,53 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+  yamllint .
+  ansible-lint .
+platforms:
+  - name: elasticsearch
+    hostname: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:${APM_SERVER_VERSION:-8.9.0}
+    pre_build_image: true
+    privileged: false
+    environment:
+      discovery.type: single-node
+    networks:
+      - name: apm_network
+        aliases:
+          - elasticsearch
+
+  - name: apm_server
+    hostname: apm_server
+    groups:
+      - apm_server_group
+    image: ${MOLECULE_DISTRO:-debian:bullseye-slim}
+    privileged: false
+    capabilities:
+      - SYS_ADMIN
+    tmpfs:
+      - /run
+      - /run/lock
+    volumes:
+      - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    command: '/lib/systemd/systemd'
+    stop_signal: 'RTMIN+3'
+    networks:
+      - name: apm_network
+        aliases:
+          - apm_server
+
+provisioner:
+  name: ansible
+  log: True
+  env:
+    ANSIBLE_FORCE_COLOR: 1
+    PY_COLORS: 1
+  inventory:
+    group_vars:
+      apm_server_group:
+        apm_server_version: ${APM_SERVER_VERSION:-8.9.0}
+verifier:
+  name: ansible

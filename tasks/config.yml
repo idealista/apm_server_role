@@ -1,0 +1,34 @@
+---
+
+- name: APM SERVER | Ensure exist all folders for config
+  file:
+    path: "{{ item }}"
+    owner: "{{ apm_server_user }}"
+    group: "{{ apm_server_group }}"
+    state: directory
+    mode: 0755
+  loop:
+    - "{{ apm_server_service_config_path }}"
+    - "{{ apm_server_data_path }}"
+    - "{{ apm_server_logs_path }}"
+    - "{{ apm_server_config_path }}"
+
+- name: APM SERVER | Configure options for apm_server service
+  template:
+    src: apm_server_config_service.j2
+    dest: "{{ apm_server_service_config_file }}"
+    owner: "{{ apm_server_user }}"
+    group: "{{ apm_server_group }}"
+    mode: 0644
+
+- name: APM SERVER | Generate config for apm_server
+  template:
+    src: "{{ item }}"
+    dest: "{{ apm_server_config_path }}/{{ item | basename }}"
+    owner: "{{ apm_server_user }}"
+    group: "{{ apm_server_group }}"
+    mode: 0644
+  with_fileglob:
+    - "{{ apm_server_config_template_path }}/*.yml"
+  notify:
+    - restart apm-server

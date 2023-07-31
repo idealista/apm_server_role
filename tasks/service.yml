@@ -1,0 +1,9 @@
+---
+
+- name: APM SERVER | Configuring service
+  systemd:
+    name: apm-server
+    state: "{{ apm_server_service_state }}"
+    enabled: "{{ apm_server_service_enabled }}"
+    daemon_reload: yes
+  register: apm_server_service_output

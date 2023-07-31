@@ -1,0 +1,46 @@
+---
+user:
+  {{ apm_server_user }}:
+    exists: true
+    uid:
+      lt: 1000
+    gid:
+      lt: 1000
+    groups:
+      - {{ apm_server_group }}
+
+group:
+  {{ apm_server_group }}:
+    exists: true
+    gid:
+      lt: 1000
+
+file:
+  {{ apm_server_home_path }}:
+    exists: true
+    filetype: directory
+  {{ apm_server_config_path }}:
+    exists: true
+    filetype: directory
+    owner: {{ apm_server_user }}
+    group: {{ apm_server_group }}
+  {{ apm_server_data_path }}:
+    exists: true
+    filetype: directory
+    owner: {{ apm_server_user }}
+    group: {{ apm_server_group }}
+  {{ apm_server_logs_path }}:
+    exists: true
+    filetype: directory
+    owner: {{ apm_server_user }}
+    group: {{ apm_server_group }}
+  {{ apm_server_config_file }}:
+    exists: true
+    filetype: file
+    owner: {{ apm_server_user }}
+    group: {{ apm_server_group }}
+
+service:
+  apm-server:
+    enabled: {{ apm_server_service_enabled }}
+    running: {{ apm_server_service_state == 'started' }}

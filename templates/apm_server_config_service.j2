@@ -1,0 +1,7 @@
+{{ ansible_managed | comment }}
+[Service]
+Environment="BEAT_LOG_OPTS={{ apm_server_log_options }}"
+Environment="BEAT_PATH_OPTS=--path.home {{ apm_server_home_path }} --path.config {{ apm_server_config_path }} --path.data {{ apm_server_data_path }} --path.logs {{ apm_server_logs_path }}"
+Environment="BEAT_CONFIG_OPTS=--c {{ apm_server_config_file }}"
+User={{ apm_server_user }}
+Group={{ apm_server_group }}

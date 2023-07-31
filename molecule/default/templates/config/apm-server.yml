@@ -1,0 +1,17 @@
+---
+apm-server:
+  host: "localhost:8200"
+
+logging:
+  level: debug
+  to_files: true
+  files:
+    path: "{{ apm_server_logs_path }}"
+    name: apm-server.json
+    keepfiles: 7
+    permissions: 0644
+  json: true
+
+output:
+  elasticsearch:
+    hosts: ["http://elasticsearch:9200"]

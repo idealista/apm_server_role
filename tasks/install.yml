@@ -1,0 +1,49 @@
+---
+
+- name: APM SERVER | Ensure {{ apm_server_group }} group
+  group:
+    name: "{{ apm_server_group }}"
+    system: yes
+    state: present
+
+- name: APM SERVER | Ensure {{ apm_server_user }} user
+  user:
+    name: "{{ apm_server_user }}"
+    group: "{{ apm_server_group }}"
+    system: yes
+    state: present
+
+- name: APM SERVER | Add package dependencies
+  apt:
+    name: "{{ package_dependencies }}"
+    state: present
+    update_cache: true
+
+- name: APM SERVER | Add gpg key
+  apt_key:
+    url: "{{ apm_server_gpg_key }}"
+    state: present
+
+- name: APM SERVER | Add ppa repository
+  apt_repository:
+    repo: "{{ apm_server_ppa_source }}"
+    state: present
+    filename: apm-server
+
+- name: APM SERVER | Install apm_server without version defined
+  apt:
+    name: "apm-server"
+    update_cache: true
+    state: "{{ apm_server_package_state }}"
+  notify:
+    - restart apm-server
+  when: apm_server_version is not defined
+
+- name: APM SERVER | Install apm_server {{ apm_server_version }}
+  apt:
+    name: "apm-server={{ apm_server_version }}"
+    update_cache: true
+    state: "present"
+  notify:
+    - restart apm-server
+  when: apm_server_version is defined

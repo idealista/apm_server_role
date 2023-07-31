@@ -1,0 +1,16 @@
+---
+
+- name: APM SERVER | Install
+  include_tasks: install.yml
+  tags:
+    - apm_server_install
+
+- name: APM SERVER | Configure
+  include_tasks: config.yml
+  tags:
+    - apm_server_configure
+
+- name: APM SERVER | Service
+  include_tasks: service.yml
+  tags:
+    - apm_server_service

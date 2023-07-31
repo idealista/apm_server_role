@@ -1,0 +1,7 @@
+---
+- name: restart apm-server
+  systemd:
+    name: apm-server
+    state: restarted
+    daemon_reload: yes
+  when: apm_server_service_state != 'stopped' and not apm_server_service_output.changed

@@ -1,0 +1,5 @@
+---
+- name: Converge
+  hosts: apm_server
+  roles:
+    - role: apm_server_role
