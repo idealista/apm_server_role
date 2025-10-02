@@ -28,3 +28,4 @@ apm_server_ppa_source: deb https://artifacts.elastic.co/packages/{{ apm_server_m
 
 package_dependencies:
   - apt-transport-https
+  - gpg
